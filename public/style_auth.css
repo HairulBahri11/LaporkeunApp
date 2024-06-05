@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap");
+
+:root {
+    --main-font: "Inter", sans-serif;
+    --bg-body: #eee9e6;
+    --bg-card: rgba(255, 255, 255, 1);
+    --bg-primary: #26973c;
+    --bg-btn-primary: #26973c;
+    --bg-btn-secondary: #9bdf7f;
+    --bg-btn-green: #a1a320;
+    --bg-body: #eef8ef;
+    --h1: 64px;
+    --h2: 42px;
+    --fw-h1: 700;
+    --fw-h2: 600;
+}
+* {
+    font-family: var(--main-font);
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.gradient-custom {
+    /* fallback for old browsers */
+    background: var(--bg-btn-primary);
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+        to right,
+        var(--bg-btn-green),
+        var(--bg-btn-secondary)
+    );
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(
+        to right,
+        var(--bg-btn-primary),
+        var(--bg-btn-secondary)
+    );
+}
+
+.img {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 15px;
+    border: 1px solid #f1e9e9;
+    background-image: url(banner.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Style untuk membuat form berada di tengah */
+.box-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Ganti dengan warna latar belakang yang Anda inginkan */
+}
+
+.form-login {
+    background-color: white;
+
+    width: 500px;
+    border-radius: 15px;
+}
+
+.logo-box {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    height: 48px;
+    border-radius: 15px;
+}
+
+.btn-primary-custom-login {
+    background-color: var(--bg-btn-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 15px;
+    height: 48px;
+    display: inline-flex;
+    padding: 6px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    width: 100%;
+    transition: ease-in-out 0.5s;
+}
+
+.btn-primary-custom-login:hover {
+    background-color: var(--bg-body);
+    border: 1px solid var(--bg-btn-primary);
+    color: var(--bg-btn-primary);
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: var(--bg-btn-primary);
+}
+
+a:hover {
+    color: var(--bg-btn-secondary);
+}
