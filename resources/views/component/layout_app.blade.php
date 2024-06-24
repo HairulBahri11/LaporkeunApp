@@ -30,6 +30,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
     @yield('style')
     {{-- custom datatables --}}
@@ -42,6 +46,7 @@
 
     }
 </style>
+
 
 <body>
     @if (session('success'))
@@ -82,7 +87,8 @@
 
                             </button>
                             <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user me-2"></i>
+                                <a class="dropdown-item" href="{{ route('data_profil') }}"><i
+                                        class="fa-solid fa-user me-2"></i>
                                     Profil</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
@@ -114,11 +120,11 @@
 
 
 
-    <div class="container-fluid">
+    {{-- <div class="container-fluid">
 
 
         <div class="row g-3 mt-2">
-            {{-- profile and menu --}}
+
             <div class="col-md-3 text-center">
                 <div class="box-data-profile custom-col p-4">
                     @auth
@@ -149,25 +155,34 @@
 
 
                             @if (Auth::user()->role == 'admin')
+                                @if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1)
+                                    <a href="{{ route('data_sekolah') }}"
+                                        class="btn @yield('active12') form-control menunya text-start" id="anak_menu">
+
+                                        <i class="fas fa-school"></i> Data Sekolah
+                                    </a>
+                                @endif
                                 <a href="{{ route('data_guru') }}"
                                     class="btn @yield('active8') form-control menunya text-start" id="anak_menu">
                                     <i class="fas fa-user-tie me-2"></i> Data Guru
                                 </a>
                                 <a href="{{ route('data_siswa') }}"
                                     class="btn @yield('active9') form-control menunya text-start" id="anak_menu">
-                                    {{-- data laporan  --}}
+
                                     <i class="fas fa-user-graduate me-2"></i> Data Siswa
                                 </a>
-                                <a href="{{ route('data_pertanyaan') }}"
-                                    class="btn @yield('active10') form-control menunya text-start" id="anak_menu">
-                                    {{-- data laporan  --}}
-                                    <i class="fas fa-question me-2"></i> Data Pertanyaan
-                                </a>
+                                @if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1)
+                                    <a href="{{ route('data_pertanyaan') }}"
+                                        class="btn @yield('active10') form-control menunya text-start" id="anak_menu">
+
+                                        <i class="fas fa-question me-2"></i> Data Pertanyaan
+                                    </a>
+                                @endif
                             @endif
                             @if (Auth::user()->role == 'guru' || Auth::user()->role == 'admin' || Auth::user()->role == 'siswa')
                                 <a href="{{ route('data_pengaduan') }}"
                                     class="btn @yield('active11') form-control menunya text-start" id="anak_menu">
-                                    {{-- data laporan  --}}
+
                                     <i class="fas fa-file-invoice me-2"></i> Data Pengaduan
                                 </a>
                             @endif
@@ -175,9 +190,9 @@
                         @endauth
 
 
-                        <a href="#" class="btn @yield('active3') form-control menunya text-start"
-                            id="pengaturan_menu">
-                            <i class="fas fa-cog me-2"></i> Pengaturan Akun
+                        <a href="{{ route('data_profil') }}"
+                            class="btn @yield('active3') form-control menunya text-start" id="pengaturan_menu">
+                            <i class="fas fa-cog me-2"></i> Pengaturan Profile
                         </a>
 
 
@@ -189,11 +204,86 @@
                 @yield('main-content')
             </div>
         </div>
+    </div> --}}
+    {{-- </div> --}}
+    <div class="container-fluid">
+        <button class="openbtn" onclick="openNav()">☰</button>
+
+        <div class="row g-3 mt-2">
+            <div id="mySidebar" class="col-md-3 sidebar text-center">
+                <a href="javascript:void(0)" class="closebtn " onclick="closeNav()">×</a>
+                <div class="box-data-profile custom-col p-4">
+                    @auth
+                        <img src="{{ asset('storage/img/' . Auth::user()->photo) }}" alt=""
+                            class="img-fluid rounded-circle"
+                            style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #D9D9D9">
+                        <p class="mt-2" style="font-size: 22px; font-weight: 600; line-height: 21px">
+                            {{ Auth::user()->name }}
+                        </p>
+                        <p class="" style="font-size: 14px; color: #0F0F0F99">
+                            {{ Auth::user()->email }}
+                        </p>
+                    @else
+                        <img src="{{ asset('user1.png') }}" alt="" class="img-fluid rounded-circle"
+                            style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #D9D9D9">
+                        <p class="mt-2" style="font-size: 22px; font-weight: 600; line-height: 21px">
+                            Hello Guest
+                        </p>
+                    @endauth
+
+                    <div class="menu">
+                        <p class="mt-4 text-start" style="font-size: 14px; color: #3C4937">Daftar Menu</p>
+                        <a href="{{ route('home') }}" class="btn @yield('active1') form-control menunya"
+                            id="menu">
+                            <i class="fas fa-home me-2"></i> Halaman Utama
+                        </a>
+                        @auth
+                            @if (Auth::user()->role == 'admin')
+                                @if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1)
+                                    <a href="{{ route('data_sekolah') }}"
+                                        class="btn @yield('active12') form-control menunya text-start" id="anak_menu">
+                                        <i class="fas fa-school"></i> Data Sekolah
+                                    </a>
+                                @endif
+                                <a href="{{ route('data_guru') }}"
+                                    class="btn @yield('active8') form-control menunya text-start" id="anak_menu">
+                                    <i class="fas fa-user-tie me-2"></i> Data Guru
+                                </a>
+                                <a href="{{ route('data_siswa') }}"
+                                    class="btn @yield('active9') form-control menunya text-start" id="anak_menu">
+                                    <i class="fas fa-user-graduate me-2"></i> Data Siswa
+                                </a>
+                                @if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1)
+                                    <a href="{{ route('data_pertanyaan') }}"
+                                        class="btn @yield('active10') form-control menunya text-start" id="anak_menu">
+                                        <i class="fas fa-question me-2"></i> Data Pertanyaan
+                                    </a>
+                                @endif
+                            @endif
+                            @if (Auth::user()->role == 'guru' || Auth::user()->role == 'admin' || Auth::user()->role == 'siswa')
+                                <a href="{{ route('data_pengaduan') }}"
+                                    class="btn @yield('active11') form-control menunya text-start" id="anak_menu">
+                                    <i class="fas fa-file-invoice me-2"></i> Data Pengaduan
+                                </a>
+                            @endif
+                        @endauth
+                        <a href="{{ route('data_profil') }}"
+                            class="btn @yield('active3') form-control menunya text-start" id="pengaturan_menu">
+                            <i class="fas fa-cog me-2"></i> Pengaturan Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9" id="main-content">
+                @yield('main-content')
+            </div>
+        </div>
     </div>
 
 
     <!-- footer -->
-    </div>
+
     <section class="mt-3">
         <!-- Footer -->
         <footer class="text-center text-lg-start text-black" style="background-color: white;">
@@ -347,7 +437,7 @@
         <!-- Footer -->
     </section>
 
-
+    @yield('script')
 
 </body>
 
@@ -368,8 +458,29 @@
 <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
 @stack('js')
+<script>
+    function openNav() {
+        document.getElementById("mySidebar").style.left = "0";
+
+    }
+
+    function closeNav() {
+        document.getElementById("mySidebar").style.left = "-250px";
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $('.select-js').select2();
+    });
+</script>
+
+
 <script>
     let datatable = $('#example').DataTable({
         "order": [

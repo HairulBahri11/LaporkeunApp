@@ -31,6 +31,18 @@
                         <div class="p-2">
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="mb-3" {{ $hidden }}>
+                                        <label for="exampleFormControlInput1" class="form-label">Sekolah</label>
+                                        <select id="sekolah_id" name="sekolah_id" class=" select-js"
+                                            style="width: 95%;background-color: #e9f1eb">
+                                            <option value="">Pilih Sekolah</option>
+                                            @foreach ($data_sekolah as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama_sekolah }}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">NIP</label>
                                         <input type="number" name="nip" class="form-control"

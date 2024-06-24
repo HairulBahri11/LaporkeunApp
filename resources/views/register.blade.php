@@ -58,24 +58,50 @@
     @endif
     <div class="container ">
         <div class="box-login p-4">
-            <form class="p-5 form-login" action="{{ route('register_action') }}" method="POST">
+            <form class="p-5 form-login-register" action="{{ route('register_action') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="logo-box">
                     <img src="{{ asset('logo-brand2.png') }}" class="text-center" alt="" width="180px"
                         height="auto">
                 </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nama</label>
-                    <input type="text" class="form-control rounded" id="name" name="name" required>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama Sekolah</label>
+                            <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">username</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="username" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Alamat</label>
+                            <input type="text" class="form-control" id="name" name="address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="name" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Logo</label>
+                            <input type="file" class="form-control " id="username" name="logo" required>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Email</label>
-                    <input type="email" class="form-control rounded" id="username" name="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
+
                 <button type="submit" class="mt-4 btn btn-primary-custom-login">Register</button>
                 <div class="register mt-3">
                     <span>Anda sudah memiliki akun ? <a href="{{ 'login' }}"> Login</a> disini</span>

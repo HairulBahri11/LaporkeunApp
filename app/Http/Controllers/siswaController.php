@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Siswa;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,12 +17,20 @@ class siswaController extends Controller
      */
     public function index()
     {
-        // asc
-        // desc
+        $data_sekolah = [];
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            // forsuper admin
 
-        $data = Siswa::orderBy('created_at', 'desc')->get();
+            $data = Siswa::all();
+        } else {
+            // data guru dari sekolah tertentu
+            $data_akun = User::where('role', 'siswa')->where('sekolah_id', Auth::user()->sekolah_id)->get();
+            foreach ($data_akun as $item => $value) {
+                $data[$item] = Siswa::where('user_id', $value->id)->first();
+            }
+        }
 
-        return view('admin.siswa.index', compact('data'));
+        return view('admin.siswa.index', compact('data', 'data_sekolah'));
     }
 
     /**
@@ -28,7 +38,15 @@ class siswaController extends Controller
      */
     public function create()
     {
-        return view('admin.siswa.create');
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            $data_sekolah = Sekolah::whereNot('id', 1)->get();
+            $hidden = '';
+        } else {
+            $data_sekolah = [];
+            $hidden = 'hidden';
+        }
+
+        return view('admin.siswa.create', compact('data_sekolah', 'hidden'));
     }
 
     /**
@@ -43,6 +61,7 @@ class siswaController extends Controller
             'phone' => 'required',
             'address' => 'required',
             'kelas' => 'required',
+            'jurusan' => 'required',
         ]);
 
         //check validation
@@ -53,7 +72,15 @@ class siswaController extends Controller
             ], 401);
         }
 
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            // forsuper admin
+            $sekolah_id = $request->sekolah_id;
+        } else {
+            $sekolah_id = Auth::user()->sekolah_id;
+        }
+
         $data = User::create([
+            'sekolah_id' => $sekolah_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -72,7 +99,7 @@ class siswaController extends Controller
             $file->storeAs('public/img', $filename);
             $data->photo = $filename;
         } else {
-            $data->photo = 'user2.png';
+            $data->photo = 'siswa-siswi.jpg';
         }
         $data->assignRole('siswa');
         $data->save();
@@ -81,7 +108,8 @@ class siswaController extends Controller
             'user_id' => $data->id,
             'nisn' => $request->nisn,
             'kelas' => $request->kelas,
-            'tahun_masuk' => $request->tahun_masuk
+            'tahun_masuk' => $request->tahun_masuk,
+            'jurusan' => $request->jurusan
         ]);
 
         $data_siswa->save();

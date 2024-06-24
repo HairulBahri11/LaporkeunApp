@@ -66,6 +66,12 @@
     width: 500px;
     border-radius: 15px;
 }
+.form-login-register {
+    background-color: white;
+
+    width: 800px;
+    border-radius: 15px;
+}
 
 .logo-box {
     padding: 10px;

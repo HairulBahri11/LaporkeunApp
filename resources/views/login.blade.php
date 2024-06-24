@@ -75,7 +75,8 @@
                 </div>
                 <button type="submit" class="mt-4 btn btn-primary-custom-login">Login</button>
                 <div class="register mt-3">
-                    <span>Anda belum memiliki akun ? <a href="{{ 'register' }}"> Register</a> disini</span>
+                    <span>Anda belum memiliki akun ? <a href="{{ 'register' }}"> Register </a>
+                        Sekolahmu disini</span>
                 </div>
             </form>
         </div>

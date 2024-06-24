@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,10 +47,12 @@ class authController extends Controller
     public function register(Request $request)
     {
         $validasi = Validator::make($request->all(), [
-            'nis' => 'required',
+            // 'nis' => 'required',
+            'nama_sekolah' => 'required',
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'logo' => 'required'
         ]);
 
         //check validation
@@ -60,16 +63,37 @@ class authController extends Controller
             ], 401);
         }
 
+        $sekolah = Sekolah::create([
+            'nama_sekolah' => $request->nama_sekolah,
+
+            'visi' => '-',
+            'misi' => '-',
+
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->storeAs('public/img', $filename);
+            $sekolah->logo = $filename;
+        } else {
+            $sekolah->logo = '-';
+        }
+
+        $sekolah->save();
+
         $user = User::create([
-            'nis' => $request->nis,
+            'sekolah_id' => $sekolah->id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role' => 'siswa',
-            'photo' => 'user2.png',
+            'role' => 'admin',
+            'photo' => 'user3.png',
+            'address' => $request->address,
         ]);
 
-        $user->assignRole('siswa');
+        $user->assignRole('admin');
 
         if ($user) {
             return redirect('/login')->with('success', 'Registrasi Berhasil Silahkan Login Terlebih Dahulu');

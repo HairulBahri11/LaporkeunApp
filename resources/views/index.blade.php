@@ -81,6 +81,13 @@
             <div class="title">
                 <h5 class="fw-bold mb-0">Halaman Utama</h5>
             </div>
+            <div class="sekolah d-flex align-items-center gap-2">
+                @if (Auth::check())
+                    <img src="{{ asset('storage/img/' . Auth::user()->sekolah->logo) }}" width="40" height="40"
+                        alt="">
+                    <h5>{{ Auth::user()->sekolah->nama_sekolah }}</h5>
+                @endif
+            </div>
             {{-- <div class="filter gap-3 d-flex flex-row align-items-center justify-content-between ">
                 <select class="form-select" aria-label="Default select example">
                     <option selected>Pilih Kategori</option>
@@ -218,107 +225,105 @@
     </div>
 
 
+    @auth
 
 
-    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'guru')
-        <div class="section  mb-3" style="border-radius: 15px; background-color: white ">
-            <div class="header-box p-4 text-center d-flex justify-content-between align-items-center">
-                <div class="title">
-                    <h5 class="fw-bold mb-0">Data Laporan</h5>
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'guru')
+            <div class="section  mb-3 d-none" style="border-radius: 15px; background-color: white ">
+                <div class="header-box p-4 text-center d-flex justify-content-between align-items-center">
+                    <div class="title">
+                        <h5 class="fw-bold mb-0">Data Laporan</h5>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            @if (count($data_pengaduan) != 0)
+            <div class="row d-none">
+                @if (count($data_pengaduan) != 0)
+                    @foreach ($data_pengaduan as $item)
+                        <div class="col-md-6">
+                            <div class="section-box p-4 mb-3" style="border-radius: 15px; background-color: white ">
+                                <div
+                                    class="header-box p-4 text-center d-flex flex-row justify-content-between align-items-center">
+                                    <div class="profile d-flex align-items-center justify-content-between">
+                                        <img src="{{ asset('storage/img/' . $item->siswa->photo) }}" alt=""
+                                            class="img-fluid rounded-circle"
+                                            style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #f1e9e9; object-fit: cover">
+                                        <div class="identitas ms-3 text-start  ">
+                                            <h6 class="fw-bold mb-0">{{ $item->siswa->name }}</h6>
+                                            <p class="mb-0">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
+                                            </p>
 
-
-
-                @foreach ($data_pengaduan as $item)
-                    <div class="col-md-6">
-                        <div class="section-box p-4 mb-3" style="border-radius: 15px; background-color: white ">
-                            <div
-                                class="header-box p-4 text-center d-flex flex-row justify-content-between align-items-center">
-                                <div class="profile d-flex align-items-center justify-content-between">
-                                    <img src="{{ asset('storage/img/' . $item->siswa->photo) }}" alt=""
-                                        class="img-fluid rounded-circle"
-                                        style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #f1e9e9; object-fit: cover">
-                                    <div class="identitas ms-3 text-start  ">
-                                        <h6 class="fw-bold mb-0">{{ $item->siswa->name }}</h6>
-                                        <p class="mb-0">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
-                                        </p>
+                                        </div>
 
                                     </div>
-
-                                </div>
-                                <span id="id_pengaduannya"></span>
-                                {{-- <button class="btn btn-outline-secondary ms-2 from-control p-3" data-bs-toggle="modal"
+                                    <span id="id_pengaduannya"></span>
+                                    {{-- <button class="btn btn-outline-secondary ms-2 from-control p-3" data-bs-toggle="modal"
                         data-bs-target="#exampleModal" style="border-radius: 15px; " type="button"
                         id="button-kirim"> --}}
-                                @if (Auth::check())
-                                    <button class="btn btn-outline-secondary ms-2 p-3" style="border-radius: 15px;"
-                                        type="button"
-                                        onclick="detail('{{ $item->id }}', '{{ $item->siswa->id }}')">
-                                        <i class="fa-solid fa-eye"></i> Detail
-                                    </button>
-                                @else
-                                    <button class="btn btn-outline-secondary ms-2 p-3" style="border-radius: 15px;"
-                                        type="button" onclick="redirectToLogin()">
-                                        <i class="fa-solid fa-eye"></i> Detail
-                                    </button>
-                                @endif
-
-                            </div>
-                            <div class="content-box ps-4 pe-4 pb-4 ">
-                                <div class="laporan">
-                                    <p style="text-align: justify">{{ $item->isi_pengaduan }}</p>
+                                    @if (Auth::check())
+                                        <button class="btn btn-outline-secondary ms-2 p-3" style="border-radius: 15px;"
+                                            type="button"
+                                            onclick="detail('{{ $item->id }}', '{{ $item->siswa->id }}')">
+                                            <i class="fa-solid fa-eye"></i> Detail
+                                        </button>
+                                    @else
+                                        <button class="btn btn-outline-secondary ms-2 p-3" style="border-radius: 15px;"
+                                            type="button" onclick="redirectToLogin()">
+                                            <i class="fa-solid fa-eye"></i> Detail
+                                        </button>
+                                    @endif
 
                                 </div>
-                                <div class="reaction">
-                                    {{-- <div class="dukungan">
+                                <div class="content-box ps-4 pe-4 pb-4 ">
+                                    <div class="laporan">
+                                        <p style="text-align: justify">{{ $item->isi_pengaduan }}</p>
+
+                                    </div>
+                                    <div class="reaction">
+                                        {{-- <div class="dukungan">
                         <i class="fa-solid fa-calendar-days text-primary" style="font-size: 20px"></i>
                         <span class="ms-1 me-4">22 Februari 2023 </span>
                     </div> --}}
-                                    <div class="komentarnya">
-                                        <i class="fa-solid fa-location-dot text-primary" style="font-size: 20px"></i>
-                                        <span class="ms-1 me-4">{{ $item->lokasi }}</span>
-                                    </div>
+                                        <div class="komentarnya">
+                                            <i class="fa-solid fa-location-dot text-primary" style="font-size: 20px"></i>
+                                            <span class="ms-1 me-4">{{ $item->lokasi }}</span>
+                                        </div>
 
-                                    {{-- <div class="jenis-kejahatan">
+                                        {{-- <div class="jenis-kejahatan">
                         <i class="fa-regular fa-user text-secondary" style="font-size: 20px"></i>
                         <span class="ms-1 me-4">Fisik</span>
                     </div> --}}
-                                    <div class="status">
-                                        <i class="fa-solid fa-check text-success" style="font-size: 20px"></i>
-                                        <span class="ms-1 ">{{ $item->status_pengaduan }}</span>
+                                        <div class="status">
+                                            <i class="fa-solid fa-check text-success" style="font-size: 20px"></i>
+                                            <span class="ms-1 ">{{ $item->status_pengaduan }}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="col-md-12">
+                        <div class="section-box p-4 mb-3" style="border-radius: 15px; background-color: white ">
+                            <div class="header-box p-4 text-center d-flex justify-content-center align-items-center">
+                                <div class="profile d-flex align-items-center justify-content-center">
+                                    <div class="identitas ms-3 text-start  ">
+
+                                        <img src="{{ asset('nodata.png') }}" alt="" width="400px" height="300px"
+                                            class="text-center">
+
                                     </div>
 
                                 </div>
-                            </div>
-
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="col-md-12">
-                    <div class="section-box p-4 mb-3" style="border-radius: 15px; background-color: white ">
-                        <div class="header-box p-4 text-center d-flex justify-content-center align-items-center">
-                            <div class="profile d-flex align-items-center justify-content-center">
-                                <div class="identitas ms-3 text-start  ">
-
-                                    <img src="{{ asset('nodata.png') }}" alt="" width="400px" height="300px"
-                                        class="text-center">
-
-                                </div>
 
                             </div>
-
                         </div>
                     </div>
-                </div>
-
-            @endif
-    @endif
+                @endif
+        @endif
+    @endauth
     </div>
     <div class="row mt-2">
         <span class="d-flex justify-content-center align-items-center">

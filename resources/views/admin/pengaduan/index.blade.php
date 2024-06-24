@@ -35,8 +35,19 @@
                     <h3 class="fw-bold mb-0">Data Pengaduan</h3>
                 </div>
                 <div class="filter gap-3 d-flex flex-row align-items-center justify-content-between ">
-
-                    <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    @php
+                        $hidden = '';
+                        // cek apakah pegaduannya sudah ditangani
+                        if (Auth::user()->role == 'siswa') {
+                            if ($data->first()->status_pengaduan == 'selesai') {
+                                $hidden = '';
+                            } else {
+                                $hidden = 'hidden';
+                            }
+                        }
+                    @endphp
+                    <button type="button" class="btn btn-primary-custom" {{ $hidden }} data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
                         Tambah Pengaduan
                     </button>
                 </div>
@@ -64,7 +75,7 @@
                                                 @foreach ($data as $item)
                                                     <tr>
                                                         <td class="text-xs text-secondary opacity-7 align-middle">
-                                                            {{ $item->created_at }}
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
                                                         </td>
                                                         <td class="text-xs text-secondary opacity-7 align-middle">
                                                             <div
@@ -157,26 +168,60 @@
                                         @method('POST')
                                         @csrf
                                         {{-- {{ dd('data', $data_siswa_available) }} --}}
-                                        <div class="mb-3">
-                                            <label for="pelapor" class="form-label">Pelapor</label>
-                                            <select id="pelapor" name="siswa_id" class="form-select"
-                                                style="background-color: #e9f1eb">
-                                                <option value="">Pilih Pelapor</option>
+                                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'guru')
+                                            <div class="mb-3">
+                                                <label for="pelapor" class="form-label">Pelapor</label>
+                                                <br>
+                                                {{-- <select id="pelapor" name="siswa_id" class="form-select select-js"
+                                                    style="background-color: #e9f1eb">
+                                                    <option value="">Pilih Pelapor</option>
+                                                    @foreach ($data_siswa_available as $item)
+                                                        @if (count($data_siswa_available) > 0)
+                                                            <option value="{{ $item['siswa_id'] }} ">{{ $item['email'] }}
+                                                                -
+                                                                {{ $item['name'] }}</option>
+                                                        @endif
+                                                    @endforeach
 
 
-                                                @foreach ($data_siswa_available as $item)
-                                                    @if (count($data_siswa_available) > 0)
-                                                        <option value="{{ $item['siswa_id'] }} ">{{ $item['email'] }} -
-                                                            {{ $item['name'] }}</option>
+                                                    @if (count($data_siswa_available) == 0)
+                                                        <option selected>Status Siswa Tidak Tersedia</option>
                                                     @endif
-                                                @endforeach
+                                                </select> --}}
+                                                <select id="pelapor" name="siswa_id" class=" select-js"
+                                                    style="width: 95%;background-color: #e9f1eb">
 
-                                                @if (count($data_siswa_available) == 0)
-                                                    <option selected>Status Siswa Tidak Tersedia</option>
-                                                @endif
+                                                    <option value="">Pilih Pelapor</option>
+                                                    @foreach ($data_siswa_available as $item)
+                                                        @if (count($data_siswa_available) > 0)
+                                                            <option value="{{ $item['siswa_id'] }}">{{ $item['email'] }} -
+                                                                {{ $item['name'] }}</option>
+                                                        @endif
+                                                    @endforeach
 
-                                            </select>
-                                        </div>
+                                                    @if (count($data_siswa_available) == 0)
+                                                        <option selected>Status Siswa Tidak Tersedia</option>
+                                                    @endif
+                                                </select>
+
+                                            </div>
+
+                                        @endif
+
+                                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'siswa')
+                                            <div class="mb-3">
+                                                <label for="exampleFormControlInput1" class="form-label">Guru</label>
+                                                <select name="guru_id" id="guru_id" class="select-js"
+                                                    style="width: 95%;background-color: #e9f1eb">
+
+                                                    <option value="">Pilih Guru</option>
+                                                    @foreach ($data_guru as $item)
+                                                        <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                                    @endforeach
+
+                                                </select>
+                                            </div>
+                                        @endif
 
                                 </div>
                             </div>
@@ -186,7 +231,7 @@
                     </div>
                     <input type="text" id="hasil-faq" name="hasilfaq" hidden>
                     {{-- <input type="text" id="hasil-idfaq"> --}}
-                    <div class="chatbox mt-5">
+                    <div class="chatbox mt-2">
                         <!-- Chat messages -->
                         <div class="row mb-3 container" id="chat-messages">
                             <!-- Initial message -->
@@ -194,7 +239,7 @@
                                 <div class="col-md-12 question" id="question-{{ $index }}">
                                     <div class="row mobile-col">
                                         <div class="col-md-6">
-                                            <p class="text-start mb-1">Admin Laporkeun</p>
+                                            <p class="text-start mb-1">FAQ</p>
                                         </div>
                                         <div class="col-md-6">
                                             <p class="text-end mb-1">
@@ -272,95 +317,24 @@
         </div>
     </div>
 
+
+
 @endsection
 
 @push('js')
-    {{-- <script>
-        let currentQuestionIndex = 0;
-        let questions = @json($pertanyaan);
-
-        function getNextQuestion() {
-            if (currentQuestionIndex < questions.length) {
-                let nextQuestion = questions[currentQuestionIndex];
-                currentQuestionIndex++;
-
-                // Create a new chat message element
-                let chatMessageElement = document.createElement("div");
-                chatMessageElement.className = "col-md-9";
-                chatMessageElement.innerHTML = `
-      <div class="row mobile-col">
-        <div class="col-md-6">
-          <p class="text-start mb-1">Admin Laporkeun</p>
-        </div>
-        <div class="col-md-6">
-          <p class="text-end mb-1">
-            <span></span>${nextQuestion.created_at.diffForHumans()}
-          </p>
-        </div>
-      </div>
-      <div class="box-percakapan">
-        <span class="form-control" id="percakapan" name="percakapan" required style="background-color: #f1e9e9">${nextQuestion.pertanyaan}</span>
-      </div>
-      <div class="jawaban text-end">
-        <span class="form-control" id="jawaban" name="jawaban" required style="background-color: #e9f1eb">
-          ${nextQuestion.options.map((option) => {
-            return `
-                                                          <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="gender" id="${option.value}" value="${option.value}">
-                                                            <label class="form-check-label" for="${option.value}">
-                                                              ${option.label}
-                                                            </label>
-                                                          </div>
-                                                        `;
-          }).join("")}
-        </span>
-      </div>
-    `;
-
-                // Add the new chat message element to the chat messages container
-                document.getElementById("chat-messages").appendChild(chatMessageElement);
-            }
-        }
-
-        // Add an event listener to the radio buttons to trigger the next question
-        document.querySelectorAll("input[type='radio']").forEach((radioButton) => {
-            radioButton.addEventListener("change", () => {
-                getNextQuestion();
-            });
-        });
-    </script> --}}
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let currentQuestionIndex = 0;
-            const questions = document.querySelectorAll('.question');
-            const submitButton = document.getElementById('submit-button');
-
-            const showNextQuestion = () => {
-                if (currentQuestionIndex < questions.length) {
-                    questions[currentQuestionIndex].style.display = 'block';
-                } else {
-                    submitButton.style.display = 'block'; // Show submit button after the last question
-                }
-            };
-
-            questions.forEach((question, index) => {
-                const inputs = question.querySelectorAll('input[type="radio"]');
-                inputs.forEach(input => {
-                    input.addEventListener('change', () => {
-                        if (index === currentQuestionIndex) {
-                            question.style.display = 'block';
-                            currentQuestionIndex++;
-                            showNextQuestion();
-                        }
-                    });
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2 ketika modal ditampilkan
+            $('#exampleModal').on('shown.bs.modal', function() {
+                $('#pelapor').select2({
+                    dropdownParent: $('#exampleModal')
+                });
+                $('#guru_id').select2({
+                    dropdownParent: $('#exampleModal')
                 });
             });
-
-            showNextQuestion(); // Show the first question initially
         });
-    </script> --}}
-
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let currentQuestionIndex = 0;

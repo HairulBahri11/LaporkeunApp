@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
 use App\Models\User;
 use App\Models\Siswa;
 use App\Models\Jawaban;
@@ -16,33 +17,37 @@ class pengaduanController extends Controller
     public function index()
     {
         if (Auth::user()->role == 'guru') {
-            $data = Pengaduan::where('guru_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            $akun_id = Auth::user()->id;
+            $guru = Guru::where('user_id', $akun_id)->first();
+            $data = Pengaduan::where('guru_id', $guru->id)->orderBy('created_at', 'desc')->get();
         } elseif (Auth::user()->role == 'siswa') {
+            $akun_id = Auth::user()->id;
+            $siswa = Siswa::where('user_id', $akun_id)->first();
             $data = Pengaduan::where('siswa_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
-        } else {
+        } elseif (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
 
             $data = Pengaduan::orderBy('created_at', 'desc')->get();
+        } else {
+            // ambil data pengaduan berdasarkan sekolah dari akun yang sedang login
+            $sekolah_id = Auth::user()->sekolah_id;
+            $data = Pengaduan::join('siswa', 'pengaduan.siswa_id', '=', 'siswa.user_id')
+                ->join('users', 'siswa.user_id', '=', 'users.id')
+                ->where('users.sekolah_id', $sekolah_id)
+                ->orderBy('pengaduan.id', 'desc')
+                ->select('pengaduan.*') // Select columns explicitly to avoid potential conflicts
+                ->get();
         }
 
-        // $siswa = User::where('role', 'siswa')->where('status', 'active')->get();
-        // foreach ($siswa as $key => $valuenya) {
-        //     // cek dulu apakah data siswa ada dipengaduan atau tidak, kalau  ada
-        //     $data_siswa = Pengaduan::where('siswa_id', $valuenya->id)->where('status_pengaduan', '==', 'selesai')->get();
-        //     $data_siswa_available[$key] = [];
-
-        //     foreach ($data_siswa as $value) {
-        //         $data_siswa_available[$key] = [
-        //             'siswa_id' => $value->siswa_id,
-        //             'name' => $value->siswa->name,
-        //             'email' => $value->siswa->email
-        //         ];
-        //     }
-        //     // lalu foreach lagi data siswa kecuali yang ada dipengaduan
-
-
-        // }
-        $siswa = User::where('role', 'siswa')->where('status', 'active')->get();
         $data_siswa_available = [];
+        $siswa = [];
+
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            $siswa = User::where('role', 'siswa')->where('status', 'active')->get();
+        } else {
+            $siswa = User::where('role', 'siswa')->where('sekolah_id', Auth::user()->sekolah_id)->where('status', 'active')->get();
+        }
+
+
 
         foreach ($siswa as $valuenya) {
             $data_siswa = Pengaduan::where('siswa_id', $valuenya->id)->where('status_pengaduan', '!=', 'selesai')->get();
@@ -59,8 +64,23 @@ class pengaduanController extends Controller
         // mengambil index array berdata
         $data_siswa_available = array_filter($data_siswa_available);
 
+        $data_guru = Guru::join('users', 'users.id', '=', 'guru.user_id')
+            ->where('users.sekolah_id', Auth::user()->sekolah_id)
+            ->where('users.status', 'active')
+            ->select('users.*', 'guru.*')
+            ->get();
+
+
         $pertanyaan = Pertanyaan::where('status', 'active')->get();
-        return view('admin.pengaduan.index', compact('data', 'data_siswa_available', 'pertanyaan',));
+        return view(
+            'admin.pengaduan.index',
+            compact(
+                'data',
+                'data_siswa_available',
+                'pertanyaan',
+                'data_guru'
+            )
+        );
     }
 
     public function show($id)
@@ -77,8 +97,18 @@ class pengaduanController extends Controller
 
         // data pengaduan
         $data = new Pengaduan();
-        $data->siswa_id = $request->siswa_id;
-        $data->guru_id = Auth::user()->id;
+        if (Auth::user()->role == 'siswa') {
+            $data->siswa_id = Auth::user()->id;
+            $data->guru_id = 1;
+        } else if (Auth::user()->role == 'admin') {
+            $data->siswa_id = $request->siswa_id;
+            $data_guru = Guru::where('id', $request->guru_id)->first();
+            $data_akun = User::where('id', $data_guru->user_id)->first();
+            $data->guru_id = $data_akun->id;
+        } else {
+            $data->siswa_id = $request->siswa_id;
+            $data->guru_id = Auth::user()->id;
+        }
         $data->isi_pengaduan = $request->isi_pengaduan;
         $data->lokasi = $request->lokasi;
         $data->tgl_pengaduan = $request->tgl_kejadian;

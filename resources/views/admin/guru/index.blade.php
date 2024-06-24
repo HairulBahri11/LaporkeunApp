@@ -49,6 +49,11 @@
                                             <thead class="bg-gray-100 p-1">
                                                 <tr style="bg-color: black" class="mt-2">
 
+                                                    @if (Auth::user()->role == 'admin' || Auth::user()->sekolah_id == 1)
+                                                        <th class="text-xs text-secondary opacity-7">Sekolah
+                                                        </th>
+                                                    @endif
+
                                                     <th class="text-xs text-secondary opacity-7">Pengajar
                                                     </th>
                                                     <th class="text-xs text-secondary opacity-7">NIP</th>
@@ -60,8 +65,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+
                                                 @foreach ($data as $item)
+                                                    @php
+
+                                                        $data_akun = App\Models\User::where(
+                                                            'id',
+                                                            $item->user_id,
+                                                        )->first();
+
+                                                    @endphp
                                                     <tr>
+                                                        @if (Auth::user()->role == 'admin' || Auth::user()->sekolah_id == 1)
+                                                            <td class="text-xs text-secondary opacity-7 align-middle">
+                                                                {{ $data_akun->sekolah->nama_sekolah }}
+                                                            </td>
+                                                        @endif
                                                         <td class="text-xs text-secondary opacity-7 align-middle">
                                                             <div
                                                                 class="img-profile d-flex align-items-center justify-content-start">
@@ -116,12 +135,12 @@
 
                                                                 <button type="submit"
                                                                     class="btn btn-sm custom-btn-setactive hover-btn"
-                                                                    onclick="return confirm('apakah kamu yakin ingin mengubah status pengajar?')"
+                                                                    onclick="return confirm('apakah kamu yakin ingin mengubah status guru?')"
                                                                     title="Ubah Status" data-id="{{ $item->gurunya->id }}">
                                                                     <i
                                                                         class="fa-solid fa-xmark text-primary fs-10"></i></button>
                                                             </form>
-                                                            <form action="{{ route('delete_guru', $item->gurunya->id) }}"
+                                                            {{-- <form action="{{ route('delete_guru', $item->gurunya->id) }}"
                                                                 method="POST" style="display: inline-block;">
                                                                 @method('POST')
                                                                 @csrf
@@ -131,7 +150,7 @@
                                                                     title="Hapus Data" data-id="{{ $item->gurunya->id }}">
                                                                     <i
                                                                         class="fa-solid fa-trash-can text-danger fs-10"></i></button>
-                                                            </form>
+                                                            </form> --}}
 
                                                         </td>
                                                     </tr>

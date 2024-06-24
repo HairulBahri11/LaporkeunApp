@@ -31,6 +31,18 @@
                         <div class="p-2">
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="mb-3" {{ $hidden }}>
+                                        <label for="exampleFormControlInput1" class="form-label">Sekolah</label>
+                                        <select id="sekolah_id" name="sekolah_id" class=" select-js"
+                                            style="width: 95%;background-color: #e9f1eb">
+                                            <option value="">Pilih Sekolah</option>
+                                            @foreach ($data_sekolah as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama_sekolah }}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">NIS</label>
                                         <input type="number" name="nisn" class="form-control"
@@ -76,6 +88,16 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
+                                        <label for="jurusan" class="form-label">Jurusan</label>
+                                        <select id="jurusan" name="jurusan" class="form-select" style=" height: 37px">
+                                            <option value="">Pilih Jurusan</option>
+                                            <option value="ipa">IPA</option>
+                                            <option value="ips">IPS</option>
+                                            <option value="bahasa">Bahasa</option>
+                                            <option value="agama">Agama</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Kelas</label>
                                         <input type="text" name="kelas" class="form-control"
                                             id="exampleFormControlInput1" placeholder="Ex. 8 D" required>
@@ -94,17 +116,13 @@
                                         <label for="exampleFormControlInput1" class="form-label">Password</label>
                                         <input type="password" name="password" class="form-control"
                                             id="exampleFormControlInput1">
-                                        <span class=" mt-1 " style="color: rgb(163, 8, 8); font-size: 11px"> Note. Isi
-                                            jika
-                                            ingin mengganti password</span>
+
                                     </div>
                                     <div class="mb-3">
                                         <label for="exampleFormControlTextarea1" class="form-label">Foto</label>
                                         <input type="file" name="photo" class="form-control"
                                             id="exampleFormControlTextarea1" rows="3">
-                                        <span class=" mt-1 " style="color: rgb(163, 8, 8); font-size: 11px"> Note. Isi
-                                            jika
-                                            ingin mengganti foto</span>
+
                                     </div>
                                     <div class="mb-3">
                                         <label for="exampleFormControlTextarea1" class="form-label">Alamat </label>

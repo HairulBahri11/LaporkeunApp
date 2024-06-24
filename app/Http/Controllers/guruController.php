@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Guru;
 use App\Models\User;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,8 +18,19 @@ class guruController extends Controller
     public function index()
 
     {
-        $data = Guru::all();
-        return view('admin.guru.index', compact('data'));
+        $data_sekolah = [];
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            // forsuper admin
+
+            $data = Guru::all();
+        } else {
+            // data guru dari sekolah tertentu
+            $data_akun = User::where('role', 'guru')->where('sekolah_id', Auth::user()->sekolah_id)->get();
+            foreach ($data_akun as $item => $value) {
+                $data[$item] = Guru::where('user_id', $value->id)->first();
+            }
+        }
+        return view('admin.guru.index', compact('data', 'data_sekolah'));
     }
 
     /**
@@ -25,7 +38,15 @@ class guruController extends Controller
      */
     public function create()
     {
-        return view('admin.guru.create');
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            $data_sekolah = Sekolah::whereNot('id', 1)->get();
+            $hidden = '';
+        } else {
+            $data_sekolah = [];
+            $hidden = 'hidden';
+        }
+
+        return view('admin.guru.create', compact('data_sekolah', 'hidden'));
     }
 
     /**
@@ -34,6 +55,7 @@ class guruController extends Controller
     public function store(Request $request)
     {
         $validasi = Validator::make($request->all(), [
+
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
@@ -50,8 +72,15 @@ class guruController extends Controller
                 'error' => $validasi->errors()
             ], 401);
         }
+        if (Auth::user()->role == 'admin' && Auth::user()->sekolah_id == 1) {
+            // forsuper admin
+            $sekolah_id = $request->sekolah_id;
+        } else {
+            $sekolah_id = Auth::user()->sekolah_id;
+        }
 
         $data = User::create([
+            'sekolah_id' => $sekolah_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -69,7 +98,7 @@ class guruController extends Controller
             $file->storeAs('public/img', $filename);
             $data->photo = $filename;
         } else {
-            $data->photo = 'user2.png';
+            $data->photo = 'user1.png';
         }
         $data->assignRole('guru');
         $data->save();

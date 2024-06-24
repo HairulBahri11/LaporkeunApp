@@ -69,6 +69,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/tambah_jawaban_action', [App\Http\Controllers\jawabanController::class, 'store'])->name('tambah_jawaban_action');
             Route::post('/delete_jawaban/{id}', [App\Http\Controllers\jawabanController::class, 'destroy'])->name('delete_jawaban');
         });
+
+        Route::group(['prefix' => 'data_sekolah'], function () {
+            Route::get('/', [App\Http\Controllers\sekolahController::class, 'index'])->name('data_sekolah');
+            Route::get('/tambah_sekolah', [App\Http\Controllers\sekolahController::class, 'create'])->name('tambah_sekolah');
+            Route::post('/tambah_sekolah_action', [App\Http\Controllers\sekolahController::class, 'store'])->name('tambah_sekolah_action');
+            Route::get('/edit_sekolah/{id}', [App\Http\Controllers\sekolahController::class, 'edit'])->name('edit_sekolah');
+            Route::post('/edit_sekolah_action/{id}', [App\Http\Controllers\sekolahController::class, 'update'])->name('edit_sekolah_action');
+            Route::post('/delete_sekolah/{id}', [App\Http\Controllers\sekolahController::class, 'destroy'])->name('delete_sekolah');
+            Route::post('/update_status/{id}', [App\Http\Controllers\sekolahController::class, 'active'])->name('active_sekolah');
+        });
     });
     Route::group(['prefix' => 'data_pengaduan'], function () {
         Route::get('/', [App\Http\Controllers\pengaduanController::class, 'index'])->name('data_pengaduan');
@@ -84,6 +94,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/update_status/{id}', [App\Http\Controllers\pengaduanController::class, 'status'])->name('status_pengaduan');
             Route::post('/proses_laporan/{id}', [App\Http\Controllers\pengaduanController::class, 'proses_laporan'])->name('proses_laporan');
         });
+    });
+
+    Route::group(['prefix' => 'data_profil'], function () {
+        Route::get('/', [App\Http\Controllers\homeController::class, 'profile'])->name('data_profil');
     });
 
     Route::group(['middleware' => 'role:siswa'], function () {

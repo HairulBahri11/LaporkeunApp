@@ -93,10 +93,12 @@
                         {{-- <a href="{{ route('edit_pengaduan', $data->id) }}" class="btn btn-outline-primary-custom"
                             id="btn-tambah">
                             Edit</a> --}}
-                        @if ($data->status_pengaduan != 'selesai')
-                            <button type="submit" class="btn btn-green-custom"
-                                id="btn-proses"onclick="return confirm('apakah kamu yakin ingin mengubah status laporan pengaduan menjadi selesai?')"
-                                title="Ubah Status">Selesai</button>
+                        @if (Auth::user()->role != 'siswa')
+                            @if ($data->status_pengaduan != 'selesai')
+                                <button type="submit" class="btn btn-green-custom"
+                                    id="btn-proses"onclick="return confirm('apakah kamu yakin ingin mengubah status laporan pengaduan menjadi selesai?')"
+                                    title="Ubah Status">Selesai</button>
+                            @endif
                         @endif
 
                     </form>
@@ -262,6 +264,7 @@
                                         <label for="nama" class="fw-bold mb-0">Ditangani
                                         </label>
                                     </td>
+                                    {{-- {{ dd($data->guru) }} --}}
 
 
                                     <td class="text-xs text-secondary opacity-7">
