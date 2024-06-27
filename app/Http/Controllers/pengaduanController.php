@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Models\Siswa;
 use App\Models\Jawaban;
 use App\Models\Pengaduan;
+use App\Mail\kirimLaporan;
 use App\Models\Pertanyaan;
 use Illuminate\Http\Request;
 use App\Models\Pengaduan_Detail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class pengaduanController extends Controller
 {
@@ -99,7 +101,7 @@ class pengaduanController extends Controller
         $data = new Pengaduan();
         if (Auth::user()->role == 'siswa') {
             $data->siswa_id = Auth::user()->id;
-            $data->guru_id = 1;
+            $data->guru_id = $request->guru_id;
         } else if (Auth::user()->role == 'admin') {
             $data->siswa_id = $request->siswa_id;
             $data_guru = Guru::where('id', $request->guru_id)->first();
@@ -116,27 +118,34 @@ class pengaduanController extends Controller
         $data->save();
 
         $id_data_pengaduan = $data->id;
-        // dd($id_data_pengaduan);
-        // array data all_jawaban
         $arr_jawaban = $request->input('hasilfaq');
         $arr_jawaban = explode(',', $arr_jawaban);
-
         $data_pertanyaan = Pertanyaan::where('status', 'active')->get();
 
         foreach ($data_pertanyaan as $key => $value) {
             // Ensure the $data object is instantiated within the loop to avoid overwriting the same object
-            $data = new Pengaduan_Detail();
-            $data->pengaduan_id = $id_data_pengaduan;
-            $data->pertanyaan_id = $value->id;
+            $data_detail = new Pengaduan_Detail();
+            $data_detail->pengaduan_id = $id_data_pengaduan;
+            $data_detail->pertanyaan_id = $value->id;
 
             // Set the jawaban attribute from $arr_jawaban, assuming the keys match
             if (isset($arr_jawaban[$key])) {
-                $data->jawaban = $arr_jawaban[$key];
+                $data_detail->jawaban = $arr_jawaban[$key];
             }
 
-            // Save the $data object
-            $data->save();
+            // Save the $data_detail object
+            $data_detail->save();
         }
+
+        // kirim ke email
+        $data_guru = User::where('id', $data_guru->user_id)->first();
+        $data_pelapor = User::where('id', $data->siswa_id)->first();
+
+        // Kirim email ke guru dan salin ke pelapor
+        Mail::to($data_guru->email)
+            ->cc($data_pelapor->email)
+            ->send(new kirimLaporan($data));
+
 
         return redirect('/data_pengaduan')->with('success', 'Data Pengaduan Berhasil Dibuat');
     }
@@ -182,5 +191,11 @@ class pengaduanController extends Controller
 
         $data->save();
         return redirect('/data_pengaduan')->with('success', 'Data Pengaduan Berhasil Diproses');
+    }
+
+
+    public function sendemail()
+    {
+        Mail::to('hairulb876@gmail.com')->send(new kirimLaporan());
     }
 }

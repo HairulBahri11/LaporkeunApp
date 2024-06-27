@@ -20,6 +20,8 @@ Route::get('/layout', function () {
     return view('component/layout_app');
 });
 
+Route::get('/kirim-email', [App\Http\Controllers\pengaduanController::class, 'sendemail'])->name('kirim-email');
+
 // authController get login and register
 
 Route::get('/login', [App\Http\Controllers\authController::class, 'login_index'])->name('login');
