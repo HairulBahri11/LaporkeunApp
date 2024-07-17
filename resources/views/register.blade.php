@@ -92,14 +92,27 @@
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="name" name="phone" required>
+                            <input type="number" class="form-control" id="name" name="phone" required>
                         </div>
                         <div class="mb-3">
                             <label for="username" class="form-label">Logo</label>
                             <input type="file" class="form-control " id="username" name="logo" required>
                         </div>
 
+
                     </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="visi" class="form-label">Visi</label>
+                        <textarea name="visi" class="form-control" cols="20" rows="5" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="visi" class="form-label">Misi</label>
+                        <textarea id="editor2" name="misi"></textarea>
+                    </div>
+
                 </div>
 
                 <button type="submit" class="mt-4 btn btn-primary-custom-login">Register</button>
@@ -110,7 +123,16 @@
         </div>
     </div>
 
-
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor2'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 
 </body>
 

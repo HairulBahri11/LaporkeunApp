@@ -20,7 +20,11 @@ Route::get('/layout', function () {
     return view('component/layout_app');
 });
 
-Route::get('/kirim-email', [App\Http\Controllers\pengaduanController::class, 'sendemail'])->name('kirim-email');
+Route::get('/', function () {
+    return view('landing');
+});
+
+
 
 // authController get login and register
 
@@ -31,7 +35,7 @@ Route::post('/login_action', [App\Http\Controllers\authController::class, 'login
 Route::post('logout', [\App\Http\Controllers\authController::class, 'logout'])->name('logout');
 // get chart
 Route::get('/chart', [App\Http\Controllers\homeController::class, 'myChart'])->name('chart');
-Route::get('/', [App\Http\Controllers\homeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\homeController::class, 'index'])->name('home');
 Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'role:admin'], function () {
@@ -88,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/tambah_pengaduan_action', [App\Http\Controllers\pengaduanController::class, 'store'])->name('tambah_pengaduan_action');
         Route::get('/detail_pengaduan/{id}', [App\Http\Controllers\pengaduanController::class, 'show'])->name('detail_pengaduan');
         Route::get('/detail_pengaduan_ajax/{id}', [App\Http\Controllers\pengaduanController::class, 'detail_ajax'])->name('detail_pengaduan_ajax');
-
+        Route::get('/kirim-email', [App\Http\Controllers\pengaduanController::class, 'sendemail'])->name('kirim-email');
         Route::group(['middleware' => 'role:admin|guru'], function () {
             Route::get('/edit_pengaduan/{id}', [App\Http\Controllers\pengaduanController::class, 'edit'])->name('edit_pengaduan');
             Route::post('/edit_pengaduan_action/{id}', [App\Http\Controllers\pengaduanController::class, 'update'])->name('edit_pengaduan_action');

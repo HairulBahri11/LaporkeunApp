@@ -52,7 +52,7 @@
     <section class="mt-3" id="home-hero-banner">
         <div class="hero">
             <div class="container-fluid">
-                <img src="{{ asset('Group 25.png') }}" alt=""
+                <img src="{{ asset('Group 101.png') }}" alt=""
                     style=" width: 100%;
                 height: 370px;
                 object-fit: cover;
@@ -61,11 +61,12 @@
             </div>
             <div class="hero-text">
                 <p class="hero-title">
-                    Cegah Kejahatan di Lingkungan Anda, Ayo Laporkan Sekarang!
+                    Sekolah Aman Tanpa Bullying Bersama Mitra Kebaikan!
+
                 </p>
                 <p class="hero-subtitle">
-                    Anda bisa mencegah kejahatan dengan mengambil langkah-langkah melaporkan
-                    melalului aplikasi ini.
+                    Laporkan tindakan bullying sekarang dan bantu ciptakan lingkungan sekolah yang lebih aman dan harmonis.
+                    Privasi Anda adalah prioritas kami.
                 </p>
             </div>
 
@@ -115,7 +116,7 @@
             <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}</option>
         @endforeach
     </select> --}}
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-6">
             <div class="section-box-card p-5 mb-3" style="border-radius: 15px; background-color: #046118 ; padding: 10px">
                 <div class="icon-box">
@@ -145,8 +146,8 @@
             </div>
         </div>
 
-    </div>
-    <div class="row">
+    </div> --}}
+    {{-- <div class="row">
         <div class="col-md-6">
             <div class="section-box-card p-5 mb-3" style="border-radius: 15px; background-color: white ; padding: 10px">
                 <div class="icon-box">
@@ -178,7 +179,7 @@
             </div>
         </div>
 
-    </div>
+    </div> --}}
 
     <div class="row mb-3">
         <div class="col-xl-8 col-xxl-8 mb-3">
@@ -262,8 +263,7 @@
                         id="button-kirim"> --}}
                                     @if (Auth::check())
                                         <button class="btn btn-outline-secondary ms-2 p-3" style="border-radius: 15px;"
-                                            type="button"
-                                            onclick="detail('{{ $item->id }}', '{{ $item->siswa->id }}')">
+                                            type="button" onclick="detail('{{ $item->id }}', '{{ $item->siswa->id }}')">
                                             <i class="fa-solid fa-eye"></i> Detail
                                         </button>
                                     @else

@@ -147,7 +147,7 @@ class pengaduanController extends Controller
             ->send(new kirimLaporan($data));
 
 
-        return redirect('/data_pengaduan')->with('success', 'Data Pengaduan Berhasil Dibuat');
+        return redirect('/data_pengaduan')->with('success', 'Data Laporan Pengaduan Berhasil Ditambahkan dan Periksa email anda');
     }
 
     public function detail_ajax(String  $id)
@@ -194,8 +194,8 @@ class pengaduanController extends Controller
     }
 
 
-    public function sendemail()
-    {
-        Mail::to('hairulb876@gmail.com')->send(new kirimLaporan());
-    }
+    // public function sendemail()
+    // {
+    //     Mail::to('hairulb876@gmail.com')->send(new kirimLaporan());
+    // }
 }

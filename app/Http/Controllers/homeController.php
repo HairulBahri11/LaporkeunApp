@@ -78,6 +78,8 @@ class homeController extends Controller
         function getTotalKasusByJawaban($month, $year, $jawaban)
         {
             return Pengaduan_Detail::join('pengaduan', 'pengaduan.id', '=', 'pengaduan_detail.pengaduan_id')
+                ->join('users', 'users.id', '=', 'pengaduan.siswa_id')
+                ->where('users.sekolah_id', Auth::user()->sekolah_id)
                 ->whereMonth('pengaduan.tgl_pengaduan', $month)
                 ->whereYear('pengaduan.tgl_pengaduan', $year)
                 ->where('pengaduan_detail.pertanyaan_id', 5)

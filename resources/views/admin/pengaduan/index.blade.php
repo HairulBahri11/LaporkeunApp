@@ -46,10 +46,40 @@
                             }
                         }
                     @endphp
-                    <button type="button" class="btn btn-primary-custom" {{ $hidden }} data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
+                    <button type="button" id="openModalBtn" class="btn btn-primary-custom" {{ $hidden }}
+                        data-bs-toggle="modal" data-bs-target="#modal_pemberitahuan">
                         Tambah Pengaduan
                     </button>
+                </div>
+            </div>
+
+            {{-- modal  --}}
+            <div class="modal" tabindex="-1" id="modal_pemberitahuan" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Pemberitahuan!
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p> <i class="fas fa-exclamation-circle text-warning fa-5x  text-center mb-3 d-block"></i>
+                                Kami berkomitmen untuk menjaga privasi dan kerahasiaan setiap pelapor. Setiap laporan
+                                mengenai tindakan bullying akan ditangani dengan serius dan penuh kehati-hatian.
+                                Bersama-sama, kita dapat menciptakan lingkungan sekolah yang lebih aman dan mendukung.
+                                <br>
+
+                                Silakan laporkan tindakan bullying yang Anda alami atau saksikan dengan tenang. Privasi Anda
+                                adalah prioritas kami.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" id="pemberitahuanModal" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" data-bs-dismiss="modal">Lanjutkan </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <section>
@@ -189,12 +219,14 @@
                                                     @endif
                                                 </select> --}}
                                                 <select id="pelapor" name="siswa_id" class=" select-js"
-                                                    style="width: 95%;background-color: #e9f1eb">
+                                                    style="width: 95%;background-color: #e9f1eb" required>
 
                                                     <option value="">Pilih Pelapor</option>
                                                     @foreach ($data_siswa_available as $item)
                                                         @if (count($data_siswa_available) > 0)
-                                                            <option value="{{ $item['siswa_id'] }}">{{ $item['email'] }} -
+                                                            <option value="{{ $item['siswa_id'] }}">
+                                                                {{ $item['email'] }}
+                                                                -
                                                                 {{ $item['name'] }}</option>
                                                         @endif
                                                     @endforeach
@@ -212,7 +244,7 @@
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">Guru</label>
                                                 <select name="guru_id" id="guru_id" class="select-js"
-                                                    style="width: 95%;background-color: #e9f1eb">
+                                                    style="width: 95%;background-color: #e9f1eb" required>
 
                                                     <option value="">Pilih Guru</option>
                                                     @foreach ($data_guru as $item)
@@ -333,6 +365,10 @@
                     dropdownParent: $('#exampleModal')
                 });
             });
+
+            $('#pemberitahuanModal').onClick(function() {
+                $('#modal_pemberitahuan').modal('close');
+            })
         });
     </script>
     <script>
@@ -385,7 +421,9 @@
                 console.log(answers);
                 // Log the answers to the console for now
 
-                if (confirm('Are you sure you want to submit the form?')) {
+                if (confirm(
+                        'Apakah kamu yakin ingin mengirimkan laporan?, Pastikan Laporan berisi data sebenar benarnya dan dapat dipertanggungjawabkan '
+                    )) {
                     // Submit the form programmatically
                     document.querySelector('#myForm').submit();
                 }

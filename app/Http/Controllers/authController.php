@@ -41,7 +41,7 @@ class authController extends Controller
         //get user5
         $user = User::where('email', $request->email)->get();
 
-        return redirect('/')->with('success', 'Login Berhasil');
+        return redirect('/home')->with('success', 'Login Berhasil');
     }
 
     public function register(Request $request)
@@ -52,7 +52,10 @@ class authController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'logo' => 'required'
+            'logo' => 'required',
+            'phone' => 'required',
+            'visi' => 'required',
+            'misi' => 'required',
         ]);
 
         //check validation
@@ -66,8 +69,8 @@ class authController extends Controller
         $sekolah = Sekolah::create([
             'nama_sekolah' => $request->nama_sekolah,
 
-            'visi' => '-',
-            'misi' => '-',
+            'visi' => $request->visi,
+            'misi' => $request->misi,
 
         ]);
 
@@ -91,6 +94,7 @@ class authController extends Controller
             'role' => 'admin',
             'photo' => 'user3.png',
             'address' => $request->address,
+            'phone' => $request->phone,
         ]);
 
         $user->assignRole('admin');

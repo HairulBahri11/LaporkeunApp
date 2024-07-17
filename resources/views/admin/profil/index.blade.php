@@ -102,7 +102,7 @@
                             <div class="row mt-2">
                                 <div class="col-md-12">
                                     <h5>Visi</h5>
-                                    <p>{{ $data_akun->sekolah->visi }}</p>
+                                    <p>{!! $data_akun->sekolah->visi !!}</p>
                                     <h5>Misi</h5>
                                     <p>{!! $data_akun->sekolah->misi !!}</p>
 
@@ -122,7 +122,7 @@
                                     </span>
                                     <a href="#" class=" mt-3 btn btn-secondary-custom"> Edit Profil</a>
                                     @if (Auth::user()->role == 'admin')
-                                        <a href="#" class=" mt-3 btn btn-green-custom"> Edit Data Sekolah</a>
+                                        <a href="" class=" mt-3 btn btn-green-custom"> Edit Data Sekolah</a>
                                     @endif
 
                                 </div>

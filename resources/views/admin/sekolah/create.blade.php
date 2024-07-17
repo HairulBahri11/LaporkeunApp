@@ -67,6 +67,7 @@
                                         <input type="text" class="form-control" name="visi" required>
                                     </div>
 
+
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Misi</label>
                                         <textarea id="editor2" name="misi" class="form-control" rows="3"></textarea>

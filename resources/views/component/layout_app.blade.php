@@ -300,8 +300,7 @@
                                     height="auto" />
                             </h5>
                             <p>
-                                Jl. Suroyo No.39, Tisnonegaran, Kec. Kanigaran, Kota
-                                Probolinggo, Jawa Timur 67219
+                                Jl Tanjung Pura Rt9 Rw5, Pegadungan, Kalideres, Jakarta Barat, DKI Jakarta 11830
                             </p>
                         </div>
                         <!-- Grid column -->
@@ -321,7 +320,7 @@
                       "
                                     href="#!" role="button"><i class="fa-brands fa-whatsapp text-black"></i>
                                 </a>
-                                <span class="text-secondary" style="font-size: 12px">098987898765</span>
+                                <span class="text-secondary" style="font-size: 12px">085157796734</span>
                             </div>
                             <div class="gmail">
                                 <a class="btn btn-floating m-1"
@@ -333,7 +332,8 @@
                                     href="#!" role="button"><i class="fa-regular fa-envelope text-black"
                                         style="font-size: 12px"></i>
                                 </a>
-                                <span class="text-secondary" style="font-size: 12px">mitrakebaikan@gmail.com</span>
+                                <span class="text-secondary"
+                                    style="font-size: 10px">app.mitrakebaikan@gmail.com</span>
                             </div>
                             <div class="notelp">
                                 <a class="btn btn-floating m-1"
@@ -345,7 +345,7 @@
                                     href="#!" role="button"><i class="fa fa-phone text-black"
                                         style="font-size: 12px"></i>
                                 </a>
-                                <span class="text-secondary" style="font-size: 12px">089878767876</span>
+                                <span class="text-secondary" style="font-size: 12px">085157796734</span>
                             </div>
                         </div>
                         <!-- Grid column -->
